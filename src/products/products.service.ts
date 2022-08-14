@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 import { isUUID } from 'class-validator';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DataSource, Repository } from 'typeorm';
@@ -17,15 +18,20 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
-    private readonly dataSource: DataSource
-  ){}
+    private readonly dataSource: DataSource,
+    private readonly configService: ConfigService
+  ) {}
 
   async create(createProductDto: CreateProductDto) {
     const {images = [], ...productDetails} = createProductDto;
     try {
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map(url => this.productImageRepository.create({url}))
+        images: images.map(url => {
+          return this.productImageRepository.create({
+            url: `${this.configService.get('API_URL')}/images/${url}`
+          });
+        })
       });
       await this.productRepository.save(product);
       return {...product, images};
