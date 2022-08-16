@@ -8,6 +8,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductImage } from './entities/product-image.entity';
 import { Product } from './entities/product.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -22,16 +23,17 @@ export class ProductsService {
     private readonly configService: ConfigService
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     const {images = [], ...productDetails} = createProductDto;
     try {
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map(url => {
-          return this.productImageRepository.create({
+        images: images.map(url => (
+          this.productImageRepository.create({
             url: `${this.configService.get('API_URL')}/images/${url}`
-          });
-        })
+          })
+        )),
+        user
       });
       await this.productRepository.save(product);
       return {...product, images};
@@ -78,7 +80,7 @@ export class ProductsService {
     };
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
     if(updateProductDto.title && !updateProductDto.slug){
       updateProductDto.slug = updateProductDto.title
       .replaceAll(' ', '_')
@@ -101,6 +103,7 @@ export class ProductsService {
       }else{
 
       }
+      product.user = user;
       await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
       await queryRunner.release();

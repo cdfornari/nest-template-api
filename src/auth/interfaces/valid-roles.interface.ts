@@ -1,0 +1,1 @@
+export type ValidRoles = 'admin' | 'user' | 'super-admin';
