@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -18,13 +19,18 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: true,
+      ssl: process.env.STAGE === 'prod',
+      extra: {
+        ssl: process.env.STAGE === 'prod' ? {rejectUnauthorized: false} : null
+      }
     }),
     ProductsModule,
     CommonModule,
     SeedModule,
     FilesModule,
-    AuthModule
+    AuthModule,
+    MessagesModule
   ]
 })
 export class AppModule {}

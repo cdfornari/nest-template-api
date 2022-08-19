@@ -28,6 +28,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       }
     })
   ],
-  exports: [JwtStrategy,PassportModule,TypeOrmModule]
+  exports: [JwtStrategy,PassportModule,TypeOrmModule,JwtModule]
 })
 export class AuthModule {}
