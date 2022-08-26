@@ -94,14 +94,14 @@ export class Product {
         (productImage) => productImage.product,
         {cascade: true, eager: true}
     )
-    @ApiProperty()
+    @ApiProperty({type: ()=> ProductImage})
     images?: ProductImage[];
 
     @ManyToOne(
         () => User,
-        (user) => user.product,
         {eager: true}
     )
+    @ApiProperty({type: ()=> User})
     user: User
 
     @BeforeInsert()

@@ -1,6 +1,6 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Product } from 'src/products/entities/product.entity';
+import { Order } from 'src/orders/entities/order.entity';
 
 @Entity({name: 'users'})
 export class User {
@@ -38,10 +38,11 @@ export class User {
     role: string;
 
     @OneToMany(
-        () => Product,
-        (product) => product.user
+        () => Order,
+        (order) => order.user
     )
-    product: Product;
+    @ApiProperty({type: ()=> Order})
+    orders: Order[];
 
     @BeforeInsert()
     @BeforeUpdate()

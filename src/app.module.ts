@@ -7,6 +7,7 @@ import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { MessagesModule } from './messages/messages.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { MessagesModule } from './messages/messages.module';
     SeedModule,
     FilesModule,
     AuthModule,
-    MessagesModule
+    MessagesModule,
+    OrdersModule
   ]
 })
 export class AppModule {}

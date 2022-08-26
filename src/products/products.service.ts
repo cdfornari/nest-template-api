@@ -100,8 +100,6 @@ export class ProductsService {
       if(images){
         await queryRunner.manager.delete(ProductImage, {product: {id}});
         product.images = images.map(url => this.productImageRepository.create({url}));
-      }else{
-
       }
       product.user = user;
       await queryRunner.manager.save(product);
